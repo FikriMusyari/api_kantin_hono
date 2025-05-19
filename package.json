@@ -1,0 +1,17 @@
+{
+  "name": "api-kantin-hono",
+  "scripts": {
+    "start": "bun run --hot src/index.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.8.2",
+    "bcryptjs": "^3.0.2",
+    "cron": "^4.3.0",
+    "hono": "^4.7.8",
+    "jose": "^6.0.11",
+    "zod": "^3.24.4"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}

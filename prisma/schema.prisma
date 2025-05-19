@@ -1,0 +1,76 @@
+// schema.prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  admin
+  kasir
+}
+
+model Produk {
+  id          Int               @id @default(autoincrement())
+  nama        String
+  harga_jual  Decimal           @db.Decimal(10, 2)
+  harga_beli  Decimal           @db.Decimal(10, 2)
+  kategori    String
+  transaksi   TransaksiDetail[]
+  laporan     Laporan[]         
+
+  @@map("products")
+}
+
+model Transaksi {
+  id          Int               @id @default(autoincrement())
+  nomor_transaksi String        @unique
+  user_id     Int
+  user        User              @relation(fields: [user_id], references: [id])
+  tanggal     DateTime          @default(now())
+  total       Decimal           @db.Decimal(10, 2)
+  tunai       Decimal           @db.Decimal(10, 2)
+  kembalian   Decimal           @db.Decimal(10, 2)
+  details     TransaksiDetail[]
+
+  @@map("transactions")
+}
+
+model TransaksiDetail {
+  id           Int       @id @default(autoincrement())
+  transaksi_id Int 
+  produk_id    Int
+  transaksi    Transaksi @relation(fields: [transaksi_id], references: [id])
+  produk       Produk    @relation(fields: [produk_id], references: [id])
+  qty          Int
+  subtotal     Decimal   @db.Decimal(10, 2)
+
+  @@map("detail_transaction")
+}
+
+model Laporan {
+  id                Int     @id @default(autoincrement())
+  nomor_laporan     String  @unique
+  bulan             Int
+  tahun             Int
+  total_pendapatan  Decimal @db.Decimal(10, 2)
+  total_pengeluaran  Decimal @db.Decimal(10, 2)
+  produk            Produk  @relation(fields: [produk_terlaris_id], references: [id])
+  produk_terlaris_id Int
+
+  @@map("reports")
+}
+
+model User {
+  id       Int        @id @default(autoincrement())
+  nama     String
+  username String     @unique
+  password String
+  role     Role
+  transactions Transaksi[]
+
+  @@map("users")
+}
