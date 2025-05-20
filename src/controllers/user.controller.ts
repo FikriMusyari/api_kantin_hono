@@ -10,7 +10,7 @@ import { rbac } from '../middleware/protected.middleware';
 export const userController = new Hono<{ Variables: ApplicationVariables }>();
 
 
-userController.post('/',  async (c) => {
+userController.post('/', authMiddleware, rbac(['admin']),  async (c) => {
     
     const request = await c.req.json() as RegisterUserRequest;
 
