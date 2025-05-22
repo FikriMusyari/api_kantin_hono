@@ -17,6 +17,22 @@ export class ProductService {
     static async create(request: CreateProductRequest): Promise<ProductResponse> {
         request = ProductValidation.CREATE.parse(request)
 
+        const existing = await prisma.produk.findFirst({
+    where: {
+      nama: {
+        equals: request.nama,
+        mode: 'insensitive',
+      }
+    }
+  });
+
+
+  if (existing) {
+    throw new HTTPException(400,{
+      message: "Product with the same name already exists"
+    });
+  }
+
          const product = await prisma.produk.create({
       data: {
         nama: request.nama,
