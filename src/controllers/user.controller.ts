@@ -4,13 +4,13 @@ import { RegisterUserRequest, LoginUserRequest, UpdateUserRequest, toUserRespons
 import { User } from '@prisma/client';
 import { authMiddleware } from '../middleware/auth.middleware';
 import { ApplicationVariables } from '../models/app-model';
-import { rbac } from '../middleware/protected.middleware';
+import { ownerOnly } from '../middleware/protected.middleware';
 
 
 export const userController = new Hono<{ Variables: ApplicationVariables }>();
 
 
-userController.post('/', authMiddleware, rbac(['admin']),  async (c) => {
+userController.post('/', authMiddleware, ownerOnly,  async (c) => {
     
     const request = await c.req.json() as RegisterUserRequest;
 

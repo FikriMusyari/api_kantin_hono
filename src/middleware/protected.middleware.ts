@@ -1,15 +1,25 @@
 import { MiddlewareHandler } from "hono";
 
 
-export const rbac = (allowedRoles: string[]): MiddlewareHandler => {
-  return async (ctx, next) => {
+const ownerOnly : MiddlewareHandler = async (ctx, next) => {
     const user = ctx.get('user');
 
-    if (!user || !allowedRoles.includes(user.role)) {
-      return ctx.json({ message: 'Access denied: insufficient role' }, 403);
+    if (!user || user.role !== "owner") {
+      return ctx.json({ message: 'Access denied: for owner' }, 403);
     }
 
     await next();
   };
-};
+
+const kasirOnly : MiddlewareHandler = async (ctx, next) => {
+    const user = ctx.get('user');
+
+    if (!user || user.role !== "kasir") {
+      return ctx.json({ message: 'Access denied: for kasir' }, 403);
+    }
+
+    await next();
+  };
+
+  export  {ownerOnly, kasirOnly};
 

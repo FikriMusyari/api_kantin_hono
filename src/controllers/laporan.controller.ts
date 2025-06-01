@@ -2,11 +2,11 @@
 import { Hono } from "hono";
 import { LaporanService } from "../services/laporan-service";
 import { authMiddleware } from "../middleware/auth.middleware";
-import { rbac } from "../middleware/protected.middleware";
+import { ownerOnly } from "../middleware/protected.middleware";
 
 export const laporanController = new Hono();
 
-laporanController.get("/", authMiddleware, rbac(['admin']), async (c) => {
+laporanController.get("/", authMiddleware, ownerOnly, async (c) => {
     const bulanRaw = c.req.query("bulan");
   const tahunRaw = c.req.query("tahun");
 

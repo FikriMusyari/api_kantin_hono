@@ -9,7 +9,7 @@ generator client {
 }
 
 enum Role {
-  admin
+  owner
   kasir
 }
 

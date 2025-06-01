@@ -24,7 +24,6 @@ app.route('/api/products', productController)
 app.route('/api/transactions', transaksiController)
 app.route('/api/reports', laporanController)
 
-
 app.onError(async (err, c) => {
     if (err instanceof HTTPException) {
         c.status(err.status)

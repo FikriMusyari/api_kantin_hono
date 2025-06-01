@@ -5,13 +5,13 @@ import {
   UpdateProductRequest,
   SearchProductRequest
 } from '../models/product-model';
-import { rbac } from '../middleware/protected.middleware';
+import { ownerOnly } from '../middleware/protected.middleware';
 import { authMiddleware } from '../middleware/auth.middleware';
 
 export const productController = new Hono();
 
 
-productController.post('/', authMiddleware, rbac(['admin']), async (c) => {
+productController.post('/', authMiddleware, ownerOnly, async (c) => {
   const request = await c.req.json() as CreateProductRequest;
   const response = await ProductService.create(request);
 
@@ -21,7 +21,7 @@ productController.post('/', authMiddleware, rbac(['admin']), async (c) => {
 });
 
 
-productController.get('/', authMiddleware, async (c) => {
+productController.get('/', authMiddleware,  async (c) => {
   const response = await ProductService.getAll();
 
   return c.json({
@@ -53,7 +53,7 @@ productController.get('/:id', async (c) => {
 });
 
 
-productController.patch('/:id', authMiddleware, rbac(['admin']), async (c) => {
+productController.patch('/:id', authMiddleware, ownerOnly, async (c) => {
   const id = Number(c.req.param('id'));
   const request = await c.req.json() as UpdateProductRequest;
 
@@ -65,7 +65,7 @@ productController.patch('/:id', authMiddleware, rbac(['admin']), async (c) => {
 });
 
 
-productController.delete('/:id', authMiddleware, rbac(['admin']), async (c) => {
+productController.delete('/:id', authMiddleware, ownerOnly, async (c) => {
   const id = Number(c.req.param('id'));
 
   const success = await ProductService.delete(id);
