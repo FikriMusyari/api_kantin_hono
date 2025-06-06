@@ -73,7 +73,7 @@ CREATE UNIQUE INDEX "users_username_key" ON "users"("username");
 ALTER TABLE "transactions" ADD CONSTRAINT "transactions_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "detail_transaction" ADD CONSTRAINT "detail_transaction_transaksi_id_fkey" FOREIGN KEY ("transaksi_id") REFERENCES "transactions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "detail_transaction" ADD CONSTRAINT "detail_transaction_transaksi_id_fkey" FOREIGN KEY ("transaksi_id") REFERENCES "transactions"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "detail_transaction" ADD CONSTRAINT "detail_transaction_produk_id_fkey" FOREIGN KEY ("produk_id") REFERENCES "products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

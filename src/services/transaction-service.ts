@@ -120,11 +120,9 @@ const produkList = await prisma.produk.findMany({
 
     const transaksi = await prisma.transaksi.findUnique({ where: { id } });
 
-    if (!transaksi || transaksi.user_id !== user.id) {
+    if (!transaksi) {
       throw new HTTPException(404, { message: "Transaksi tidak ditemukan" });
     }
-
-    await prisma.transaksiDetail.deleteMany({ where: { transaksi_id: id } });
 
     await prisma.transaksi.delete({ where: { id } });
 

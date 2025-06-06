@@ -43,7 +43,7 @@ model TransaksiDetail {
   id           Int       @id @default(autoincrement())
   transaksi_id Int 
   produk_id    Int
-  transaksi    Transaksi @relation(fields: [transaksi_id], references: [id])
+  transaksi    Transaksi @relation(fields: [transaksi_id], references: [id], onDelete: Cascade)
   produk       Produk    @relation(fields: [produk_id], references: [id])
   qty          Int
   subtotal     Decimal   @db.Decimal(10, 2)
