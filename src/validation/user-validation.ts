@@ -17,7 +17,8 @@ export class UserValidation {
     static readonly TOKEN: ZodType = z.string().min(1)
 
     static readonly UPDATE: ZodType = z.object({
-        password: z.string().min(1).max(100).optional(),
+        oldPassword: z.string().min(1).max(100).optional(),
+        newPassword: z.string().min(1).max(100).optional(),
         nama: z.string().min(1).max(100).optional(),
     })
 

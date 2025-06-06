@@ -15,7 +15,8 @@ export type LoginUserRequest = {
 }
 
 export type UpdateUserRequest = {
-    password?: string;
+    oldPassword?: string;
+    newPassword?: string;
     nama?: string;
 }
 

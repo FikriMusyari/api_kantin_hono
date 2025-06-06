@@ -94,7 +94,6 @@ const produkList = await prisma.produk.findMany({
 
   static async getAll(user: User): Promise<TransaksiResponse[]> {
     const transaksiList = await prisma.transaksi.findMany({
-      where: { user_id: user.id },
       include: {
         user: true,
         details: { include: { produk: true } },

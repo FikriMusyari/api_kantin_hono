@@ -107,25 +107,37 @@ export class UserService {
     static async update(user: User, request: UpdateUserRequest): Promise<UserResponse> {
         request = UserValidation.UPDATE.parse(request);
 
+        const updateData: any = {};
+
         if (request.nama) {
-            user.nama = request.nama;
+        updateData.nama = request.nama;
+    }
+    
+    if (request.oldPassword && request.newPassword) {
+        const isPasswordValid = await compare(request.oldPassword, user.password);
+        if (!isPasswordValid) {
+            throw new HTTPException(401, {
+                message: "Current password is incorrect"
+            });
         }
-
-        if (request.password) {
-            user.password = await hash(request.password, 10);
-        }
-
-        const updatedUser = await prisma.user.update({
-            where: {
-                username: user.username
-            },
-            data: {
-                nama: user.nama,
-                password: user.password
-            }
+        
+        updateData.password = await hash(request.newPassword, 10);
+    }
+    
+    if (Object.keys(updateData).length === 0) {
+        throw new HTTPException(400, {
+            message: "No data provided for update"
         });
-
-        return toUserResponse(updatedUser);
+    }
+    
+    const updatedUser = await prisma.user.update({
+        where: {
+            username: user.username
+        },
+        data: updateData
+    });
+    
+    return toUserResponse(updatedUser);
     }
 
     static async logout(user: User): Promise<boolean> {
