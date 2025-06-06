@@ -6,7 +6,7 @@ export class UserValidation {
         username: z.string().min(1).max(100),
         password: z.string().min(1).max(100),
         nama: z.string().min(1).max(100),
-        role: z.enum(['admin', 'kasir'])
+        role: z.enum(['owner', 'kasir'])
     })
 
     static readonly LOGIN: ZodType = z.object({

@@ -93,7 +93,11 @@ const produkList = await prisma.produk.findMany({
   }
 
   static async getAll(user: User): Promise<TransaksiResponse[]> {
+
+    const whereRole = user.role === 'owner' as any? {} : { user_id: user.id };
+
     const transaksiList = await prisma.transaksi.findMany({
+      where: whereRole,
       include: {
         user: true,
         details: { include: { produk: true } },
@@ -131,7 +135,7 @@ const produkList = await prisma.produk.findMany({
     filter = TransaksiValidation.SEARCH.parse(filter)
    
     const whereClause: any = {
-    user_id: user.id,
+    ...(user.role !== 'owner' as any && { user_id: user.id }),
      ...(filter.tanggal && {
     tanggal: {
       gte: `${filter.tanggal}T00:00:00.000Z`, 

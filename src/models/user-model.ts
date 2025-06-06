@@ -1,11 +1,11 @@
-import { User } from "@prisma/client";
+import { User, Role } from "@prisma/client";
 
 
 export type RegisterUserRequest = {
     nama: string;
     username: string;
     password: string; 
-    role: 'admin' | 'kasir'; 
+    role: Role; 
 }
 
 export type LoginUserRequest = {
@@ -25,7 +25,7 @@ export type UserResponse = {
     id: number;
     username: string;
     nama: string;
-    role: 'admin' | 'kasir';
+    role: Role;
     token?: string;
 }
 
