@@ -104,6 +104,18 @@ export class UserService {
         }
     }
 
+    static async getAllUsers(): Promise<UserResponse[]> {
+        const users = await prisma.user.findMany();
+        
+        if (users.length === 0) {
+            throw new HTTPException(404, {
+                message: "No users found"
+            });
+        }
+        
+        return users.map(toUserResponse);
+    }
+
     static async update(user: User, request: UpdateUserRequest): Promise<UserResponse> {
         request = UserValidation.UPDATE.parse(request);
 
@@ -143,4 +155,37 @@ export class UserService {
     static async logout(user: User): Promise<boolean> {
         return true;
     }
+
+    static async deleteUser(id: number): Promise<boolean> {
+    
+    const user = await prisma.user.findUnique({
+        where: { id }
+    });
+
+    if (!user) {
+        throw new HTTPException(404, {
+            message: "User not found"
+        });
+    }
+
+    if (user.role === 'owner') {
+        const ownerCount = await prisma.user.count({
+            where: { role: 'owner' }
+        });
+
+        if (ownerCount <= 1) {
+            throw new HTTPException(400, {
+                message: "Cannot delete the last owner account"
+            });
+        }
+    }
+
+    // Delete user
+    await prisma.user.delete({
+        where: { id }
+    });
+
+    return true;
+}
+
 }

@@ -39,6 +39,13 @@ userController.get('/current', authMiddleware, async (c) => {
     });
 });
 
+userController.get('/all', authMiddleware, ownerOnly, async (c) => {
+    const response = await UserService.getAllUsers();
+    return c.json({
+        data: response
+    });
+});
+
 userController.patch('/current', authMiddleware, async (c) => {
     const user = c.get('user') as User;
     const request = await c.req.json() as UpdateUserRequest;
@@ -56,4 +63,14 @@ userController.delete('/current', authMiddleware, async (c) => {
         return c.json({
             data: response
         }); 
+});
+
+userController.delete('/:id', authMiddleware, ownerOnly, async (c) => {
+    const id = Number(c.req.param('id'));
+    
+    const success = await UserService.deleteUser(id);
+    
+    return c.json({
+        data: success
+    });
 });
